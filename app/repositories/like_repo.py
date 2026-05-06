@@ -1,0 +1,21 @@
+from sqlalchemy.orm import Session
+from app.models.like import Like
+
+def get_like(db: Session, user_id: int, post_id: int):
+    return db.query(Like).filter(
+        Like.user_id == user_id,
+        Like.post_id == post_id
+    ).first()
+
+def get_like_count(db: Session, post_id: int):
+    return db.query(Like).filter(Like.post_id == post_id).count()
+
+def create_like(db: Session, like: Like):
+    db.add(like)
+    db.commit()
+    db.refresh(like)
+    return like
+
+def delete_like(db: Session, like: Like):
+    db.delete(like)
+    db.commit()
